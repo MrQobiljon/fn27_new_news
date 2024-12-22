@@ -2,6 +2,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, get_object_or_404, get_list_or_404
 
 from .models import Post, Category
+from .forms import PostForm
 
 # Create your views here.
 
@@ -35,6 +36,27 @@ def post_detail(request, post_id):
         "title": post.title
     }
     return render(request, 'detail.html', context)
+
+
+def add_post(request: WSGIRequest):
+
+    if request.method == 'POST':
+        form = PostForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            post = Post.objects.create(**form.cleaned_data)
+            print(post, "qo'shildi!")
+
+    form = PostForm()
+    context = {
+        "form": form
+    }
+    return render(request, 'add_post.html', context)
+
+
+
+
+
+
 
 
 
